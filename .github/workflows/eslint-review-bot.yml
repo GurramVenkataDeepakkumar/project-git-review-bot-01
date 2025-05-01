@@ -25,6 +25,7 @@ jobs:
       - name: Run ESLint and Review Bot
         run: |
           npx eslint . --ext .js,.jsx,.ts,.tsx
+          npx eslint . -f json -o eslint-report.json
           node eslint-review-bot.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
