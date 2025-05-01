@@ -10,6 +10,15 @@ const report = JSON.parse(fs.readFileSync('eslint-report.json', 'utf8'));
 
 const commentOnPR = async (comment, path, line) => {
   const url = `https://api.github.com/repos/${owner}/${repoName}/pulls/${pr}/comments`;
+  const customComment = `
+🛑 **ESLint Error: ${message.message}**
+
+- **Rule**: \`${message.ruleId}\`
+- **Severity**: ${message.severity === 2 ? 'Error' : 'Warning'}
+
+_Please fix this issue in the code for better maintainability._
+`;
+
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -17,10 +26,10 @@ const commentOnPR = async (comment, path, line) => {
       Accept: 'application/vnd.github.v3+json',
     },
     body: JSON.stringify({
-      body: comment,
+      body: {customComment},
       path: path,
       line: line,
-      side: 'RIGHT',
+      side: 'LEFT',
     }),
   });
 
